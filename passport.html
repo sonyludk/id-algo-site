@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Паспорт — DOM_JS. Считываем информацию из DOM</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+	<link rel="apple-touch-icon" href="images/favicon.png">
+	<meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="images/logo.png" alt="logo">
+    <h1>Паспорт — DOM_JS</h1>
+    <nav class="nav">
+      <a href="index.html">Главная</a>
+      <a href="passport.html">Паспорт (DOM)</a>
+      <a href="algo.html">Алгоритм №1014</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h2>Страницы паспорта (вторая и третья)</h2>
+
+      <!-- ВАЖНО: элементы имеют id, чтобы показать getElementById -->
+      <section>
+        <h3>Страница 2</h3>
+        <p id="p-last">Фамилия: <strong id="lastName">Желудкова</strong></p>
+        <p id="p-first">Имя: <strong id="firstName">София</strong></p>
+      </section>
+
+      <section>
+        <h3>Страница 3</h3>
+        <p id="p-year">Год рождения: <strong id="birthYear">2006</strong></p>
+        <p>Адрес: г. Москва</p>
+      </section>
+
+      <hr>
+
+      <h3>Демонстрация получения данных из DOM</h3>
+      <p>Нажми кнопку — значения будут считаны через <code>document.getElementById</code> и показаны ниже.</p>
+      <div class="form-row">
+        <button id="read-dom">Считать фамилию / имя / год (getElementById)</button>
+      </div>
+      <pre id="dom-output" class="highlight">Здесь появится результат чтения из DOM</pre>
+
+      <h3>Транслитерация (кириллица → латиница)</h3>
+      <p>Нажми, чтобы заменить фамилию/имя на латиницу. Только первая буква останется заглавной (Zh, Ch и т.д.).</p>
+      <div class="form-row">
+        <button id="latinize-btn">Заменить на латиницу</button>
+      </div>
+
+      <h3>Скриншот из консоли</h3>
+      <p>Сделай скрин в DevTools: выполни в консоли <code>document.getElementById('lastName').innerText</code> — и вставь сюда изображение результата.</p>
+      <!-- ВСТАВЬ СЮДА СВОЙ СКРИНШОТ -->
+      <img src="images/placeholder-screenshot.png" alt="Скриншот консоли (вставь свой)" style="max-width:100%;border-radius:6px;border:1px solid #eee;margin-top:8px">
+    </div>
+  </main>
+
+  <footer class="footer">Сайт 1 — DOM & JS</footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // подсветка навигации
+      document.querySelectorAll('.nav a').forEach(a=>{
+        if(a.getAttribute('href') === 'passport.html') a.classList.add('active');
+      });
+
+      // чтение через getElementById
+      document.getElementById('read-dom').addEventListener('click', ()=>{
+        const last = document.getElementById('lastName').innerText;
+        const first = document.getElementById('firstName').innerText;
+        const year = document.getElementById('birthYear').innerText;
+        const out = `Фамилия: ${last}\nИмя: ${first}\nГод рождения: ${year}`;
+        document.getElementById('dom-output').textContent = out;
+        console.log("Получено из DOM:", {last, first, year});
+      });
+
+      // транслитерация (с правильной заглавной)
+      function transliterateWord(word) {
+        const map = {
+          'А':'A','Б':'B','В':'V','Г':'G','Д':'D','Е':'E','Ё':'E','Ж':'Zh','З':'Z','И':'I','Й':'Y','К':'K','Л':'L','М':'M','Н':'N','О':'O','П':'P','Р':'R','С':'S','Т':'T','У':'U','Ф':'F','Х':'Kh','Ц':'Ts','Ч':'Ch','Ш':'Sh','Щ':'Shch','Ы':'Y','Э':'E','Ю':'Yu','Я':'Ya',
+          'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ы':'y','э':'e','ю':'yu','я':'ya'
+        };
+
+        let result = '';
+        for (let i = 0; i < word.length; i++) {
+          const c = word[i];
+          result += map[c] !== undefined ? map[c] : c;
+        }
+
+        if (result.length > 0) {
+          result = result[0].toUpperCase() + result.slice(1);
+        }
+        return result;
+      }
+
+      document.getElementById('latinize-btn').addEventListener('click', ()=>{
+        const ln = document.getElementById('lastName');
+        const fn = document.getElementById('firstName');
+        ln.textContent = transliterateWord(ln.textContent);
+        fn.textContent = transliterateWord(fn.textContent);
+        alert('Фамилия и имя переведены на латиницу.');
+      });
+    });
+  </script>
+</body>
+</html>

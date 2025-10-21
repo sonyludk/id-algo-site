@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Алгоритмическая задача №1014</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+	<link rel="apple-touch-icon" href="images/favicon.png">
+	<meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="images/logo.png" alt="logo">
+    <h1>Задача №1014 — прямоугольники</h1>
+    <nav class="nav">
+      <a href="index.html">Главная</a>
+      <a href="passport.html">Паспорт (DOM)</a>
+      <a href="algo.html">Алгоритм №1014</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h2>Условие (1014)</h2>
+      <p>Даны вещественные положительные числа <strong>a, b, c, d</strong>. Выясните, может ли прямоугольник со сторонами <em>a, b</em> уместиться внутри прямоугольника со сторонами <em>c, d</em>, так, что каждая сторона внутреннего прямоугольника параллельна или перпендикулярна стороне внешнего (т.е. допускается поворот на 90°).</p>
+
+      <h3>Проверка</h3>
+      <div class="form-row">
+        <label>Сторона a <input id="a" type="number" step="any" min="0.0001" value="2"></label>
+      </div>
+      <div class="form-row">
+        <label>Сторона b <input id="b" type="number" step="any" min="0.0001" value="3"></label>
+      </div>
+      <div class="form-row">
+        <label>Сторона c (внешний) <input id="c" type="number" step="any" min="0.0001" value="4"></label>
+      </div>
+      <div class="form-row">
+        <label>Сторона d (внешний) <input id="d" type="number" step="any" min="0.0001" value="2.5"></label>
+      </div>
+
+      <div class="form-row">
+        <button id="check">Проверить</button>
+      </div>
+
+      <pre id="result" class="highlight">Результат появится здесь</pre>
+
+      <h4>Комментарий к решению</h4>
+      <p>Если стороны внутреннего прямоугольника должны быть параллельны/перпендикулярны сторонам внешнего (т.е. нет произвольного углового поворота кроме 90°), то достаточно проверить две ориентации:</p>
+      <ol>
+        <li>a ≤ c и b ≤ d</li>
+        <li>или a ≤ d и b ≤ c</li>
+      </ol>
+      <p>Если хотя бы одно выполняется — прямоугольник поместится.</p>
+    </div>
+  </main>
+
+  <footer class="footer">Сайт 1 — Алгоритм №1014</footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.querySelectorAll('.nav a').forEach(a=>{
+        if(a.getAttribute('href') === 'algo.html') a.classList.add('active');
+      });
+      document.getElementById('check').addEventListener('click', ()=>{
+        const a = parseFloat(document.getElementById('a').value);
+        const b = parseFloat(document.getElementById('b').value);
+        const c = parseFloat(document.getElementById('c').value);
+        const d = parseFloat(document.getElementById('d').value);
+        const resEl = document.getElementById('result');
+
+        if([a,b,c,d].some(x => !isFinite(x) || x <= 0)){
+          resEl.textContent = 'Введите положительные действительные числа для всех сторон.';
+          return;
+        }
+
+        // допускается поворот на 90°, но не произвольный угол
+        const fits = (a <= c && b <= d) || (a <= d && b <= c);
+
+        resEl.textContent = fits ? 'Может уместиться (YES).' : 'Не может уместиться (NO).';
+        console.log({a,b,c,d,fits});
+      });
+    });
+  </script>
+</body>
+</html>
